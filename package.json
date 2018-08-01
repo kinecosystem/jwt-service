@@ -20,7 +20,7 @@
     "url": "https://github.com/kinecosystem/jwt-service"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/body-parser": "^1.16.8",
