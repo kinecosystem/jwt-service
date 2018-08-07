@@ -96,6 +96,43 @@ export const getSpendJWT = function(req: SpendRequest, res: Response) {
 	}
 } as any as RequestHandler;
 
+export const getP2PJWT = function(req: SpendRequest, res: Response) {
+	const missing = [
+		"offer_id",
+		"amount",
+		"sender_title",
+		"sender_description",
+		"recipient_id",
+		"recipient_title",
+		"recipient_description"].filter(name => req.query[name] === undefined);
+
+	if (missing.length > 0) {
+		res.status(400).send({ error: missing.join(", ") + " query params are missing" });
+	} else {
+		const payload = {
+			offer: {
+				id: req.query.offer_id,
+				amount: req.query.amount
+			},
+			sender: {
+				title: req.query.sender_title,
+				description: req.query.sender_description
+			},
+			recipient: {
+				user_id: req.query.recipient_id,
+				title: req.query.recipient_title,
+				description: req.query.recipient_description
+			}
+		} as any;
+
+		if (req.query.sender_id) {
+			payload.sender.user_id = req.query.sender_id;
+		}
+
+		res.status(200).json({ jwt: sign("pay_to_user", payload) });
+	}
+} as any as RequestHandler;
+
 export const getOffers = function(req: Request, res: Response) {
 	res.status(200).send({ offers: CONFIG.offers });
 } as any as RequestHandler;
