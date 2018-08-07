@@ -96,7 +96,19 @@ export const getSpendJWT = function(req: SpendRequest, res: Response) {
 	}
 } as any as RequestHandler;
 
-export const getP2PJWT = function(req: SpendRequest, res: Response) {
+export type P2PRequest = Request & {
+	query: {
+		offer_id: string;
+		amount: number;
+		sender_title: string;
+		sender_description: string;
+		recipient_id: string;
+		recipient_title: string;
+		recipient_description: string;
+	}
+};
+
+export const getP2PJWT = function(req: P2PRequest, res: Response) {
 	const missing = [
 		"offer_id",
 		"amount",

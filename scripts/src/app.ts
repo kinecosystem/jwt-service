@@ -2,6 +2,7 @@ import * as express from "express";
 
 import { getConfig } from "./config";
 import {
+	getP2PJWT,
 	getOffers,
 	getEarnJWT,
 	getSpendJWT,
@@ -32,7 +33,7 @@ export const app = createApp();
 
 app.get("/offers", getOffers);
 app.get("/earn/token", getEarnJWT);
-app.get("/p2p/token", getSpendJWT);
+app.get("/p2p/token", getP2PJWT);
 app.get("/spend/token", getSpendJWT);
 app.get("/register/token", getRegisterJWT);
 app.get("/validate", validateJWT);
