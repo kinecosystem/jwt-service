@@ -57,9 +57,38 @@ Result:
 }
 ```
 
+#### earn
+Returns a token which can be used to create an earn order:  
+`GET SERVICE_URL/earn/token?user_id=userA&offer_id=offer1&nonce=MyUniqueNonce`
+
+Result:
+```json
+{
+    "jwt": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJ0eXAiOiJKV1QiLCJpZCI6Im9mZmVyMSIsInRpdGxlIjoidGhpcmQgb2ZmZXIiLCJhbW91bnQiOjMwLCJkZXNjcmlwdGlvbiI6InRoZSAzcmQgdGVzdCBvZmZlciIsIndhbGxldF9hZGRyZXNzIjoiR0RDNlVBV1pFVFFSWERGSkhIWlMyTzdKSzJPUTNGNU1OT1pMSEpQNFREN0o2TUI1UTJOSDVZR1UiLCJpYXQiOjE1MjM4NzI4MDYsImV4cCI6MTUyNTQxODI3OTE3MCwic3ViIjoic3BlbmQifQ.d2pEsXzWMr-XXNfnKYL52C-GscRMdIqtrETdpGc2R_TOnLcScXMLFU62HshP3hxZW88vi5JY42MszVApNmCQ_XI9XgVcZcAIYx6Ef63sO-e1WG8_oPRFFLwHf1p8VylArtkvaz2JkWbHVPQuCNdcwf31JUMVSqJZHGk6ez3KaSQ"
+}
+```
+
+The `user_id` the id for the user which will receive the kin.  
+The `offer_id` needs to match one of the offers which returns from the `SERVICE_URL/offers` endpoint.  
+The `nonce` is an optional id (string) which can be used to differentiate between multiple requests for the same `offer_id`.
+
 #### spend
 Returns a token which can be used to create a spend order:  
-`GET SERVICE_URL/spend/token?offer_id=offer1`
+`GET SERVICE_URL/spend/token?offer_id=offer1&nonce=MyUniqueNonce`
+
+Result:
+```json
+{
+    "jwt": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJ0eXAiOiJKV1QiLCJpZCI6Im9mZmVyMSIsInRpdGxlIjoidGhpcmQgb2ZmZXIiLCJhbW91bnQiOjMwLCJkZXNjcmlwdGlvbiI6InRoZSAzcmQgdGVzdCBvZmZlciIsIndhbGxldF9hZGRyZXNzIjoiR0RDNlVBV1pFVFFSWERGSkhIWlMyTzdKSzJPUTNGNU1OT1pMSEpQNFREN0o2TUI1UTJOSDVZR1UiLCJpYXQiOjE1MjM4NzI4MDYsImV4cCI6MTUyNTQxODI3OTE3MCwic3ViIjoic3BlbmQifQ.d2pEsXzWMr-XXNfnKYL52C-GscRMdIqtrETdpGc2R_TOnLcScXMLFU62HshP3hxZW88vi5JY42MszVApNmCQ_XI9XgVcZcAIYx6Ef63sO-e1WG8_oPRFFLwHf1p8VylArtkvaz2JkWbHVPQuCNdcwf31JUMVSqJZHGk6ez3KaSQ"
+}
+```
+
+The `offer_id` needs to match one of the offers which returns from the `SERVICE_URL/offers` endpoint.  
+The `nonce` is an optional id (string) which can be used to differentiate between multiple requests for the same `offer_id`.
+
+#### pay to user
+Returns a token which can be used to create a p2p order:  
+`GET SERVICE_URL/p2p/token?offer_id=offer1&amount=0.43&sender_title=paidTitle&sender_description=paid_desc&recipient_id=userB&recipient_title=receivedTitle&recipient_description=receivedDesc&nonce=MyUniqueNonce`
 
 Result:
 ```json
@@ -69,6 +98,13 @@ Result:
 ```
 
 The `offer_id` needs to match one of the offers which returns from the `SERVICE_URL/offers` endpoint.
+The `amount` is how many kin this payment represents.
+The `sender_title` is the title which the sender will see.  
+The `sender_description` is the description which the sender will see.  
+The `recipient_id` the id of the user which will receive the kin.  
+The `recipient_title` is the title which the recipient will see.  
+The `recipient_description` is the description which the recipient will see.  
+The `nonce` is an optional id (string) which can be used to differentiate between multiple requests for the same `offer_id`.
 
 #### register
 Returns a token which can be used to register a user:  
