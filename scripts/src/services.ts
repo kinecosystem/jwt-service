@@ -42,6 +42,8 @@ export type EarnRequest = Request & {
 	query: {
 		user_id: string;
 		offer_id: string;
+
+		nonce?: string;
 	}
 };
 
@@ -58,7 +60,7 @@ export const getEarnJWT = function(req: EarnRequest, res: Response) {
 				jwt: sign("earn", {
 					offer: { id: offer.id, amount: offer.amount },
 					recipient: { user_id: req.query.user_id, title: offer.title, description: offer.description }
-				})
+				}, req.query.nonce)
 			});
 		}
 	} else {
@@ -69,6 +71,8 @@ export const getEarnJWT = function(req: EarnRequest, res: Response) {
 export type SpendRequest = Request & {
 	query: {
 		offer_id: string;
+
+		nonce?: string;
 	}
 };
 
@@ -89,7 +93,7 @@ export const getSpendJWT = function(req: SpendRequest, res: Response) {
 				Object.assign(payload.sender, { user_id: req.query.user_id });
 			}
 
-			res.status(200).json({ jwt: sign("spend", payload) });
+			res.status(200).json({ jwt: sign("spend", payload, req.query.nonce) });
 		}
 	} else {
 		res.status(400).send({ error: "'offer_id' query param is missing" });
@@ -105,6 +109,8 @@ export type P2PRequest = Request & {
 		recipient_id: string;
 		recipient_title: string;
 		recipient_description: string;
+
+		nonce?: string;
 	}
 };
 
@@ -141,7 +147,7 @@ export const getP2PJWT = function(req: P2PRequest, res: Response) {
 			payload.sender.user_id = req.query.sender_id;
 		}
 
-		res.status(200).json({ jwt: sign("pay_to_user", payload) });
+		res.status(200).json({ jwt: sign("pay_to_user", payload, req.query.nonce) });
 	}
 } as any as RequestHandler;
 
@@ -213,14 +219,15 @@ export const validateJWT = async function(req: ValidateRequest, res: Response) {
 	}
 } as any as RequestHandler;
 
-function sign(subject: string, payload: any) {
+function sign(subject: string, payload: any, nonce: string = "default") {
 	const signWith = PRIVATE_KEYS.random();
 
 	payload = Object.assign({
 		iss: getConfig().app_id,
 		exp: moment().add(6, "hours").valueOf(),
 		iat: moment().valueOf(),
-		sub: subject
+		sub: subject,
+		nonce
 	}, payload);
 
 	return jsonwebtoken.sign(payload, signWith.key, {
