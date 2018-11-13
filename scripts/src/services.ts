@@ -219,16 +219,19 @@ export const validateJWT = async function(req: ValidateRequest, res: Response) {
 	}
 } as any as RequestHandler;
 
-function sign(subject: string, payload: any, nonce: string = "default") {
+function sign(subject: string, payload: any, nonce?: string) {
 	const signWith = PRIVATE_KEYS.random();
 
 	payload = Object.assign({
 		iss: getConfig().app_id,
 		exp: moment().add(6, "hours").valueOf(),
 		iat: moment().valueOf(),
-		sub: subject,
-		nonce
+		sub: subject
 	}, payload);
+
+	if (nonce) {
+		payload.nonce = nonce;
+	}
 
 	return jsonwebtoken.sign(payload, signWith.key, {
 		header: {
