@@ -166,7 +166,7 @@ export const signArbitraryPayload = function(req: ArbitraryPayloadRequest, res: 
 	if (req.body.subject && req.body.payload) {
 		res.status(200).json({ jwt: sign(req.body.subject, req.body.payload) });
 	} else {
-		res.status(400).send({ error: `missing 'subject' and/or 'payload' in request body` });
+		res.status(400).send({ error: "missing 'subject' and/or 'payload' in request body" });
 	}
 } as any as RequestHandler;
 
@@ -189,21 +189,21 @@ export type JWTContent = {
 async function getPublicKey(kid: string): Promise<string> {
 	let publicKey = PUBLIC_KEYS.get(kid);
 	if (publicKey) {
-		getDefaultLogger().info(`found public key ${kid} locally`);
+		getDefaultLogger().info(`found public key ${ kid } locally`);
 	} else if (CONFIG.marketplace_service) {
 		// try to get key from marketplace service
-		const res = await axios.default.get(`${CONFIG.marketplace_service}/v1/config`);
+		const res = await axios.default.get(`${ CONFIG.marketplace_service }/v1/config`);
 		for (const key of Object.keys(res.data.jwt_keys)) {
 			PUBLIC_KEYS.set(key, res.data.jwt_keys[key].key);
 		}
 		publicKey = PUBLIC_KEYS.get(kid);
 		if (publicKey) {
-			getDefaultLogger().info(`found public key ${kid} from remote`);
+			getDefaultLogger().info(`found public key ${ kid } from remote`);
 		}
 	}
 	if (!publicKey) {
-		getDefaultLogger().error(`did not find public key ${kid}`);
-		throw new Error(`no key for kid ${kid}`);
+		getDefaultLogger().error(`did not find public key ${ kid }`);
+		throw new Error(`no key for kid ${ kid }`);
 	}
 	return publicKey;
 }
@@ -224,8 +224,8 @@ function sign(subject: string, payload: any, nonce?: string) {
 
 	payload = Object.assign({
 		iss: getConfig().app_id,
-		exp: moment().add(6, "hours").valueOf(),
-		iat: moment().valueOf(),
+		exp: moment().add(6, "hours").unix(),
+		iat: moment().unix(),
 		sub: subject
 	}, payload);
 
