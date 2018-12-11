@@ -27,12 +27,24 @@ const PUBLIC_KEYS = new Map<string, string>();
 export type RegisterRequest = Request & {
 	query: {
 		user_id: string;
+		iat?: string;
+		exp?: string;
 	}
 };
 
 export const getRegisterJWT = function(req: RegisterRequest, res: Response) {
 	if (req.query.user_id) {
-		res.status(200).json({ jwt: sign("register", { user_id: req.query.user_id }) });
+		const data = { user_id: req.query.user_id } as any;
+
+		if (req.query.iat) {
+			data.iat = parseInt(req.query.iat, 10);
+		}
+
+		if (req.query.exp) {
+			data.exp = parseInt(req.query.exp, 10);
+		}
+
+		res.status(200).json({ jwt: sign("register", data) });
 	} else {
 		res.status(400).send({ error: "'user_id' query param is missing" });
 	}
