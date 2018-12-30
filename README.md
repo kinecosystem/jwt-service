@@ -59,7 +59,7 @@ Result:
 
 #### earn
 Returns a token which can be used to create an earn order:  
-`GET SERVICE_URL/earn/token?user_id=userA&offer_id=offer1&nonce=MyUniqueNonce`
+`GET SERVICE_URL/earn/token?user_id=userA&device_id=deviceA&offer_id=offer1&nonce=MyUniqueNonce`
 
 Result:
 ```json
@@ -69,12 +69,13 @@ Result:
 ```
 
 The `user_id` the id for the user which will receive the kin.  
+The `device_id` the id of the device for the user which will receive the kin.  
 The `offer_id` needs to match one of the offers which returns from the `SERVICE_URL/offers` endpoint.  
 The `nonce` is an optional id (string) which can be used to differentiate between multiple requests for the same `offer_id`.
 
 #### spend
 Returns a token which can be used to create a spend order:  
-`GET SERVICE_URL/spend/token?offer_id=offer1&nonce=MyUniqueNonce`
+`GET SERVICE_URL/spend/token?user_id=userA&offer_id=offer1&device_id=deviceA&nonce=MyUniqueNonce`
 
 Result:
 ```json
@@ -83,12 +84,14 @@ Result:
 }
 ```
 
+The `user_id` the id for the user which will send the kin.  
+The `device_id` the id of the device for the user which will send the kin. 
 The `offer_id` needs to match one of the offers which returns from the `SERVICE_URL/offers` endpoint.  
 The `nonce` is an optional id (string) which can be used to differentiate between multiple requests for the same `offer_id`.
 
 #### pay to user
 Returns a token which can be used to create a p2p order:  
-`GET SERVICE_URL/p2p/token?offer_id=offer1&amount=0.43&sender_title=paidTitle&sender_description=paid_desc&recipient_id=userB&recipient_title=receivedTitle&recipient_description=receivedDesc&nonce=MyUniqueNonce`
+`GET SERVICE_URL/p2p/token?user_id=userA&device_id=deviceA&offer_id=offer1&amount=0.43&sender_title=paidTitle&sender_description=paid_desc&recipient_id=userB&recipient_title=receivedTitle&recipient_description=receivedDesc&nonce=MyUniqueNonce`
 
 Result:
 ```json
@@ -97,6 +100,8 @@ Result:
 }
 ```
 
+The `user_id` the id for the user which will send the kin.  
+The `device_id` the id of the device for the user which will send the kin. 
 The `offer_id` needs to match one of the offers which returns from the `SERVICE_URL/offers` endpoint.
 The `amount` is how many kin this payment represents.
 The `sender_title` is the title which the sender will see.  
@@ -108,7 +113,7 @@ The `nonce` is an optional id (string) which can be used to differentiate betwee
 
 #### register
 Returns a token which can be used to register a user:  
-`GET SERVICE_URL/register/token?user_id=aUserID`
+`GET SERVICE_URL/register/token?user_id=aUserID&device_id=deviceA`
 
 Result:
 ```json
