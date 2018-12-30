@@ -24,9 +24,15 @@ const CONFIG = getConfig();
 const PRIVATE_KEYS = new KeyMap();
 const PUBLIC_KEYS = new Map<string, string>();
 
-export type RegisterRequest = Request & {
+export type BaseRequest = Request & {
 	query: {
 		user_id: string;
+		device_id: string;
+	}
+};
+
+export type RegisterRequest = BaseRequest & {
+	query: {
 		iat?: string;
 		exp?: string;
 	}
@@ -34,7 +40,10 @@ export type RegisterRequest = Request & {
 
 export const getRegisterJWT = function(req: RegisterRequest, res: Response) {
 	if (req.query.user_id) {
-		const data = { user_id: req.query.user_id } as any;
+		const data = {
+			user_id: req.query.user_id,
+			device_id: req.query.device_id
+		} as any;
 
 		if (req.query.iat) {
 			data.iat = parseInt(req.query.iat, 10);
@@ -50,11 +59,9 @@ export const getRegisterJWT = function(req: RegisterRequest, res: Response) {
 	}
 } as any as RequestHandler;
 
-export type EarnRequest = Request & {
+export type EarnRequest = BaseRequest & {
 	query: {
-		user_id: string;
 		offer_id: string;
-
 		nonce?: string;
 	}
 };
@@ -71,7 +78,12 @@ export const getEarnJWT = function(req: EarnRequest, res: Response) {
 			res.status(200).json({
 				jwt: sign("earn", {
 					offer: { id: offer.id, amount: offer.amount },
-					recipient: { user_id: req.query.user_id, title: offer.title, description: offer.description }
+					recipient: {
+						user_id: req.query.user_id,
+						device_id: req.query.device_id,
+						title: offer.title,
+						description: offer.description
+					}
 				}, req.query.nonce)
 			});
 		}
@@ -80,10 +92,9 @@ export const getEarnJWT = function(req: EarnRequest, res: Response) {
 	}
 } as any as RequestHandler;
 
-export type SpendRequest = Request & {
+export type SpendRequest = BaseRequest & {
 	query: {
 		offer_id: string;
-
 		nonce?: string;
 	}
 };
@@ -99,7 +110,12 @@ export const getSpendJWT = function(req: SpendRequest, res: Response) {
 		} else {
 			const payload = {
 				offer: { id: offer.id, amount: offer.amount },
-				sender: { title: offer.title, description: offer.description }
+				sender: {
+					user_id: req.query.user_id,
+					device_id: req.query.device_id,
+					title: offer.title,
+					description: offer.description
+				}
 			};
 			if (req.query.user_id) {
 				Object.assign(payload.sender, { user_id: req.query.user_id });
@@ -112,7 +128,7 @@ export const getSpendJWT = function(req: SpendRequest, res: Response) {
 	}
 } as any as RequestHandler;
 
-export type P2PRequest = Request & {
+export type P2PRequest = BaseRequest & {
 	query: {
 		offer_id: string;
 		amount: number;
@@ -145,6 +161,8 @@ export const getP2PJWT = function(req: P2PRequest, res: Response) {
 				amount: req.query.amount
 			},
 			sender: {
+				user_id: req.query.user_id,
+				device_id: req.query.device_id,
 				title: req.query.sender_title,
 				description: req.query.sender_description
 			},
