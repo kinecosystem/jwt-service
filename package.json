@@ -1,6 +1,6 @@
 {
   "name": "@kinecosystem/jwt-service",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A helper service for the creation of JWT needed to work with the Kin ecosystem SDKs",
   "main": "scripts/bin/index.js",
   "types": "scripts/bin/index.d.ts",
