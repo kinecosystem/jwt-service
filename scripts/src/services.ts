@@ -170,7 +170,7 @@ export const getP2PJWT = function(req: P2PRequest, res: Response) {
 	if (missing.length > 0) {
 		res.status(400).send({ error: missing.join(", ") + " query params are missing" });
 	} else if (IS_VALID_NON_BASE10_NUMBER.test(req.query.amount)) {
-		res.status(400).send({ error: `amount ${req.query.amount} must be a base 10 integer or float` });
+		res.status(400).send({ error: `amount ${ req.query.amount } must be a base 10 integer or float` });
 	} else {
 		const payload = {
 			offer: {
