@@ -23,7 +23,7 @@ class KeyMap extends Map<string, { algorithm: string; key: Buffer; }> {
 const CONFIG = getConfig();
 const PRIVATE_KEYS = new KeyMap();
 const PUBLIC_KEYS = new Map<string, string>();
-const IS_VALID_NON_BASE10_NUMBER = /^0[\dx]|^\.|[^0-9^.]+/; // For testing for base 10 integers and floats.
+const IS_NON_BASE10_NUMBER = /^0[\dxX]|^\.|[^0-9^.]+/;  // or a float without leading 0 (eg .43)
 export type BaseRequest = Request & {
 	query: {
 		user_id?: string;
@@ -169,8 +169,8 @@ export const getP2PJWT = function(req: P2PRequest, res: Response) {
 
 	if (missing.length > 0) {
 		res.status(400).send({ error: missing.join(", ") + " query params are missing" });
-	} else if (IS_VALID_NON_BASE10_NUMBER.test(req.query.amount)) {
-		res.status(400).send({ error: `amount ${ req.query.amount } must be a base 10 integer or float` });
+	} else if (IS_NON_BASE10_NUMBER.test(req.query.amount)) {
+		res.status(400).send({ error: `amount field (${req.query.amount}) must be a base 10 integer or float` });
 	} else {
 		const payload = {
 			offer: {
