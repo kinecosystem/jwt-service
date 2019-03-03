@@ -1,4 +1,5 @@
-# Kin ecosystem JWT service **** This is a development tool and should NOT be used in production ****
+# Kin ecosystem JWT service 
+# **** This is a development tool and should NOT be used in production ****
 
 A helper tool to create/sign [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token).  
 Tokens are needed, in some cases, when interacting with our [marketplace server](https://github.com/kinfoundation/marketplace-server), 
